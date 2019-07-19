@@ -17,4 +17,23 @@
         <h4>{{ post.author }}</h4>
         <p>{{ post.text|linebreaksbr }}</p>
     </div>
+    <hr>
+    <a class="btn btn-default" href="{% url 'add_comment_to_post' pk=post.pk %}">Add comment</a>
+    {% for comment in post.comments.all %}
+        {% if user.is_authenticated%}
+            <div class="comment">
+                <div class="date">
+                    {{ comment.created_date }}
+                    <a class="btn btn-default" href="{% url 'comment_remove' pk=comment.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
+                    <a class="btn btn-default" href="{% url 'comment_approve' pk=comment.pk %}"><span class="glyphicon glyphicon-ok"></span></a>
+                </div>
+                <strong>{{ comment.author }}</strong>
+                <p>{{ comment.text|linebreaks }}</p>
+            </div>
+        {% else %}
+            <p>댓글 :  로그인이 필요합니다.</p>
+        {% endif %}
+    {% empty %}
+        <p>댓글이 없습니다.</p>
+    {% endfor %}
 {% endblock %}
